@@ -1,5 +1,6 @@
 # Executable target for the unit tests
-add_executable(unit-tests)
+add_executable(unit-tests
+        test-StudentLinkedList.cpp)
 
 target_link_libraries(
 	unit-tests

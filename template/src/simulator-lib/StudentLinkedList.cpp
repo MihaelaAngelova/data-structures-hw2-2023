@@ -1,4 +1,5 @@
 #include "StudentLinkedList.h"
+#include <sstream>
 
 bool StudentLinkedList::isEmpty()const {
     return !head;
@@ -120,4 +121,19 @@ void StudentLinkedList::deleteNode(Node* node) {
     }
     delete node;
     size--;
+}
+
+std::string StudentLinkedList::toString() const {
+    Node* current = head;
+    std::stringstream result;
+
+    while (current) {
+        result << current->student.getFN();
+        if (current->next) {
+            result << " ";
+        }
+        current = current->next;
+    }
+
+    return result.str();
 }

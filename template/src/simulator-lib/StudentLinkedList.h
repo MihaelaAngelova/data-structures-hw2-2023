@@ -3,6 +3,7 @@
 
 #include "Student.h"
 #include <iostream>
+#include <cstring>
 
 struct Node {
     Student student;
@@ -26,6 +27,9 @@ public:
     Student& getFirstStudent()const;
     void insert(const Student& student, size_t maxGroupSize);
     void enter(StudentLinkedList& studentsInBar, size_t barCapacity, size_t currentMinute, size_t maxGroupSize, std::ostream& output);
+
+    /// For debug and testing purposes
+    std::string toString() const;
 };
 
 
