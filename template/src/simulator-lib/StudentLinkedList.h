@@ -21,7 +21,6 @@ private:
 public:
     StudentLinkedList(): head(nullptr), tail(nullptr), size(0) {}
     bool isEmpty()const;
-    void insertAt(size_t pos, Student student);
     void insertAtEnd(Student student);
     void deleteFirst();
     size_t getSize()const;

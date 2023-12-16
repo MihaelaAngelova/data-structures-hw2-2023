@@ -4,37 +4,15 @@ bool StudentLinkedList::isEmpty()const {
     return !head;
 }
 
-void StudentLinkedList::insertAt(size_t pos, Student student) {
-    if(pos == 0) {
-        if(isEmpty()) {
-            Node* node = new Node{student, nullptr};
-            head = node;
-            tail = node;
-        } else {
-            Node* node = new Node{student, head};
-            tail = head;
-            head = node;
-        }
+void StudentLinkedList::insertAtEnd(Student student) {
+    if(isEmpty()) {
+        head = new Node{student, nullptr};
+        tail = head;
     } else {
-        if(pos > size) {
-            throw std::runtime_error("Index out of range!");
-        }
-        if(pos == size) {
-            tail->next = new Node{student, nullptr};
-            tail = tail->next;
-        } else {
-            Node* temp = head;
-            while(pos-- > 1) { // one index before the one we want to insert at
-                temp = temp->next;
-            }
-            temp->next = new Node{student, temp->next};
-        }
+        tail->next = new Node{student, nullptr};
+        tail = tail->next;
     }
     size++;
-}
-
-void StudentLinkedList::insertAtEnd(Student student) {
-    insertAt(size, student);
 }
 
 void StudentLinkedList::deleteFirst() {
@@ -112,7 +90,6 @@ void StudentLinkedList::enter(StudentLinkedList& other, size_t otherCapacity, si
     if(isEmpty()) return;
     size_t count = 1;
     Node* temp = head;
-    Major major = head->getStudent().getMajor();
     if(size == 1) {
         temp->student.setLeavingMinute(currentMinute + temp->getStudent().getDuration());
         other.insertAtEnd(temp->getStudent());
@@ -122,7 +99,7 @@ void StudentLinkedList::enter(StudentLinkedList& other, size_t otherCapacity, si
     }
     while(temp && other.getSize() < otherCapacity) { // for every group in the current list (queue of students waiting to enter the bar)
         Node* headOfGroup = temp;
-        major = temp->getStudent().getMajor();
+        Major major = temp->getStudent().getMajor();
         // save the first node of the current group
         while(temp->next && count < maxGroupSize) { // find current group size
             temp = temp->next;
@@ -130,6 +107,7 @@ void StudentLinkedList::enter(StudentLinkedList& other, size_t otherCapacity, si
                 count++;
             }
         }
+
         if(count <= otherCapacity - other.getSize()) { // if there is enough space
             temp = headOfGroup;
             while(count-- > 0) {
