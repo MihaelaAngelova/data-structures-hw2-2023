@@ -16,21 +16,7 @@ void StudentLinkedList::insertAtEnd(Student student) {
 }
 
 void StudentLinkedList::deleteFirst() {
-    if(isEmpty()) {
-        throw std::runtime_error("Empty list!");
-    }
-
-    if(head->next) {
-        Node* temp = head->next;
-        delete head;
-        head = temp;
-    } else {
-        delete head;
-        head = nullptr;
-        tail = nullptr;
-    }
-
-    size--;
+    deleteNode(head);
 }
 
 size_t StudentLinkedList::getSize()const {
@@ -42,8 +28,8 @@ void StudentLinkedList::leave(size_t& currentMinute, std::ostream& output) {
     Node* temp = head;
     while(temp) {
         Node* next = temp->next;
-        if(temp->getStudent().getLeavingMinute() == currentMinute) {
-            output << currentMinute  << " " << temp->getStudent().getFN() << " exit" << std::endl;
+        if(temp->student.getLeavingMinute() == currentMinute) {
+            output << currentMinute  << " " << temp->student.getFN() << " exit" << std::endl;
             deleteNode(temp);
         }
         temp = next;
@@ -51,7 +37,7 @@ void StudentLinkedList::leave(size_t& currentMinute, std::ostream& output) {
 }
 
 Student& StudentLinkedList::getFirstStudent()const {
-    return head->getStudent();
+    return head->student;
 }
 
 void StudentLinkedList::insert(const Student& student, size_t maxGroupSize){
@@ -63,9 +49,9 @@ void StudentLinkedList::insert(const Student& student, size_t maxGroupSize){
     } else {
         Node* temp = head;
         while(temp) {
-            if(student.getMajor() == temp->getStudent().getMajor()) {
+            if(student.getMajor() == temp->student.getMajor()) {
                 size_t count = 1;
-                while(temp->next && (student.getMajor() == temp->next->getStudent().getMajor())) {
+                while(temp->next && (student.getMajor() == temp->next->student.getMajor())) {
                     count++;
                     temp = temp->next;
                 }
@@ -91,19 +77,19 @@ void StudentLinkedList::enter(StudentLinkedList& other, size_t otherCapacity, si
     size_t count = 1;
     Node* temp = head;
     if(size == 1) {
-        temp->student.setLeavingMinute(currentMinute + temp->getStudent().getDuration());
-        other.insertAtEnd(temp->getStudent());
-        output << currentMinute << " " << temp->getStudent().getFN() << " enter" << std::endl;
+        temp->student.setLeavingMinute(currentMinute + temp->student.getDuration());
+        other.insertAtEnd(temp->student);
+        output << currentMinute << " " << temp->student.getFN() << " enter" << std::endl;
         deleteFirst();
         return;
     }
     while(temp && other.getSize() < otherCapacity) { // for every group in the current list (queue of students waiting to enter the bar)
         Node* headOfGroup = temp;
-        Major major = temp->getStudent().getMajor();
+        Major major = temp->student.getMajor();
         // save the first node of the current group
         while(temp->next && count < maxGroupSize) { // find current group size
             temp = temp->next;
-            if(temp->getStudent().getMajor() == major) {
+            if(temp->student.getMajor() == major) {
                 count++;
             }
         }
@@ -112,9 +98,9 @@ void StudentLinkedList::enter(StudentLinkedList& other, size_t otherCapacity, si
             temp = headOfGroup;
             while(count-- > 0) {
                 Node* next = temp->next;
-                temp->student.setLeavingMinute(currentMinute + temp->getStudent().getDuration());
-                other.insertAtEnd(temp->getStudent());
-                output << currentMinute << " " << temp->getStudent().getFN() << " enter" << std::endl;
+                temp->student.setLeavingMinute(currentMinute + temp->student.getDuration());
+                other.insertAtEnd(temp->student);
+                output << currentMinute << " " << temp->student.getFN() << " enter" << std::endl;
                 deleteNode(temp);
                 temp = next;
             }

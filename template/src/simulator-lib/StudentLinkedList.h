@@ -8,9 +8,6 @@ struct Node {
     Student student;
     Node* next;
     Node(Student student, Node* next): student(student), next(next) {}
-    Student& getStudent() {
-        return student;
-    }
 };
 
 class StudentLinkedList {
@@ -18,6 +15,7 @@ private:
     Node* head;
     Node* tail;
     size_t size;
+    void deleteNode(Node* node);
 public:
     StudentLinkedList(): head(nullptr), tail(nullptr), size(0) {}
     bool isEmpty()const;
@@ -28,7 +26,6 @@ public:
     Student& getFirstStudent()const;
     void insert(const Student& student, size_t maxGroupSize);
     void enter(StudentLinkedList& other, size_t otherCapacity, size_t currentMinute, size_t maxGroupSize, std::ostream& output);
-    void deleteNode(Node* node);
 };
 
 

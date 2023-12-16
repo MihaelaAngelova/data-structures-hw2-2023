@@ -46,18 +46,18 @@ Student studentUpdate(std::istream& input) {
     std::string line;
     std::getline(input, line);
 
-    for(size_t i = 0; i < line.size(); i++) {
-        if(line[i] == ' ') {
+    for(char i : line) { // count spaces
+        if(i == ' ') {
             spaces++;
         }
     }
 
-    if(spaces < 3) {
-        // throw error
+    if(spaces < 3) { // wrong input
+        throw std::runtime_error("Not enough student data!");
     }
 
     size_t currSpaces = 0;
-    for(size_t i = 0; i < line.size(); i++) {
+    for(size_t i = 0; i < line.size(); i++) { // set indexes of every relevant space
         if (line[i] == ' ') {
             currSpaces++;
             if(currSpaces == 1) {
@@ -70,18 +70,18 @@ Student studentUpdate(std::istream& input) {
         }
     }
 
-    std::string fnString = line.substr(0, indexOfFirstSpace);
+    std::string fnString = line.substr(0, indexOfFirstSpace); // substr of the data
     std::string minuteString = line.substr(indexOfFirstSpace + 1, indexOfSecondSpace - indexOfFirstSpace - 1);
     std::string majorString = line.substr(indexOfSecondSpace + 1, indexOfLastSpace - indexOfSecondSpace - 1);
     std::string durationString = line.substr(indexOfLastSpace + 1);
 
-    int fn, minute, duration;
-    fn = stoi(fnString);
-    minute = stoi(minuteString);
+    size_t fn, minute, duration; // set input values
+    fn = (size_t)stoi(fnString);
+    minute = (size_t)stoi(minuteString);
     Major major = strToMajor(majorString);
-    duration = stoi(durationString);
+    duration = (size_t)stoi(durationString);
 
-    Student student(fn, minute, major, duration);
+    Student student(fn, minute, major, duration); // update student data
     return student;
 }
 
@@ -136,6 +136,4 @@ void simulate_bar(std::istream& input, std::ostream& output)
         }
         currentMinute++;
     }
-
-
 }
