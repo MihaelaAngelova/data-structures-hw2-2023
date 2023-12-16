@@ -173,7 +173,7 @@ TEST_CASE("insert() works for an empty list")
     REQUIRE(sll.getSize() == 1);
 }
 
-TEST_CASE("insert() works if no space in groups with the same major")
+TEST_CASE("insert() works if there is no space in groups with the same major")
 {
     StudentLinkedList sll;
     Student student1(1, 0, FRAUD, 2);
@@ -215,7 +215,7 @@ TEST_CASE("insert() works if there are no groups with the same major")
     REQUIRE(sll.getSize() == 5);
 }
 
-TEST_CASE("insert() works if there is enough space in a group with his major")
+TEST_CASE("insert() works if there is enough space in a group with the student's major")
 {
     StudentLinkedList sll;
     Student student1(1, 0, FRAUD, 2);
@@ -255,24 +255,21 @@ TEST_CASE("enter() works for an empty queue")
     REQUIRE(output.str() == expectedOutput);
 }
 
-TEST_CASE("enter() handles leaving students when there is space for the first group")
+TEST_CASE("enter() works when there is space in the first group")
 {
     StudentLinkedList queue;
     StudentLinkedList bar;
     size_t maxGroupSize = 2;
     size_t barCapacity = 2;
     size_t currentMinute = 42;
-
     Student student1(1, 0, FRAUD, 2);
     Student student2(2, 0, FRAUD, 2);
     Student student3(3, 0, FRAUD, 2);
     Student student4(4, 0, FRAUD, 2);
-
     queue.insertAtEnd(student1);
     queue.insertAtEnd(student2);
     queue.insertAtEnd(student3);
     queue.insertAtEnd(student4);
-
     std::string expectedQueue = "3 4";
     std::string expectedBar = "1 2";
     std::stringstream output;
@@ -284,26 +281,26 @@ TEST_CASE("enter() handles leaving students when there is space for the first gr
     REQUIRE(output.str() == "42 1 enter\n42 2 enter\n");
 }
 
-TEST_CASE("enter() handles leaving students when there is space for the second group")
+TEST_CASE("enter() works when there is space in the second group")
 {
     StudentLinkedList queue;
     StudentLinkedList bar;
-    size_t maxGroupSize = 3;
+    size_t maxGroupSize = 2;
     size_t barCapacity = 2;
     size_t currentMinute = 42;
 
-    Student student1(1, 0, FRAUD, 2);
-    Student student2(2, 0, FRAUD, 2);
-    Student student3(3, 0, FRAUD, 2);
-    Student student4(4, 0, MICROMANAGEMENT, 2);
+    Student student1(2, 0, FRAUD, 2);
+    Student student2(3, 0, FRAUD, 2);
+    Student student3(4, 0, MICROMANAGEMENT, 2);
+    Student studentInBar1(1, 0, SUBJECTIVISTICS, 10);
+    bar.insertAtEnd(studentInBar1);
 
     queue.insertAtEnd(student1);
     queue.insertAtEnd(student2);
     queue.insertAtEnd(student3);
-    queue.insertAtEnd(student4);
 
-    std::string expectedQueue = "1 2 3";
-    std::string expectedBar = "4";
+    std::string expectedQueue = "2 3";
+    std::string expectedBar = "1 4";
     std::stringstream output;
 
     queue.enter(bar, barCapacity, currentMinute, maxGroupSize, output);
