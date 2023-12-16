@@ -94,6 +94,10 @@ void simulate_bar(std::istream& input, std::ostream& output)
     std::string firstLine;
     std::getline(input, firstLine);
 
+    if(firstLine.empty()) {
+        throw std::runtime_error("Empty input!");
+    }
+
     std::stringstream firstLineStream(firstLine);
     firstLineStream >> K >> G >> N;
 
@@ -116,13 +120,15 @@ void simulate_bar(std::istream& input, std::ostream& output)
         Student s = studentUpdate(input);
         allStudents.insertAtEnd(s);
     }
+
     StudentLinkedList studentsWaiting; // a list of the queue of students
     StudentLinkedList studentsInBar; // a list of the students in the bar with max size K
 
     while(!allStudents.isEmpty() || !studentsInBar.isEmpty()) {
-
+        // LEAVE THE BAR
         studentsInBar.leave(currentMinute, output); // check if some of the students should leave the bar at this exact minute
 
+        // WAIT IN FRONT OF THE BAR
         while(allStudents.getSize() > 0 && (allStudents.getFirstStudent().getMinute() == currentMinute)) {
             // while there still are students who should show up and if one of them arrives at the current minute
             studentsWaiting.insert(allStudents.getFirstStudent(), G); // move the student into the queue
@@ -131,9 +137,11 @@ void simulate_bar(std::istream& input, std::ostream& output)
             // this way I can move students from one structure to another in order to track their actions easily
         }
 
+        // ENTER THE BAR
         if(studentsInBar.getSize() < K) { // if there is enough space for someone to enter the bar
             studentsWaiting.enter(studentsInBar, K, currentMinute, G, output);
         }
-        currentMinute++;
+
+        currentMinute++; // track the minutes
     }
 }
