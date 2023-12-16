@@ -25,7 +25,7 @@ public:
     void leave(size_t& currentMinute, std::ostream& output);
     Student& getFirstStudent()const;
     void insert(const Student& student, size_t maxGroupSize);
-    void enter(StudentLinkedList& other, size_t otherCapacity, size_t currentMinute, size_t maxGroupSize, std::ostream& output);
+    void enter(StudentLinkedList& studentsInBar, size_t barCapacity, size_t currentMinute, size_t maxGroupSize, std::ostream& output);
 };
 
 

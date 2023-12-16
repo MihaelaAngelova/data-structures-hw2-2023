@@ -41,49 +41,35 @@ Student& StudentLinkedList::getFirstStudent()const {
 }
 
 void StudentLinkedList::insert(const Student& student, size_t maxGroupSize){
-    if(isEmpty()) {
-        Node* node = new Node{student, nullptr};
-        head = node;
-        tail = node;
-        size++;
-    } else {
-        Node* temp = head;
-        while(temp) {
-            if(student.getMajor() == temp->student.getMajor()) {
-                size_t count = 1;
-                while(temp->next && (student.getMajor() == temp->next->student.getMajor())) {
-                    count++;
-                    temp = temp->next;
-                }
-                if(count < maxGroupSize) {
-                    temp->next = new Node{student, temp->next};
-                    if(tail == temp) {
-                        tail = temp->next;
-                    }
-                    size++;
-                    return;
-                }
+    Node* temp = head;
+    while(temp) { // find where to insert the student
+        if(student.getMajor() == temp->student.getMajor()) { // found a student with the same major
+            size_t count = 1;
+            while(temp->next && (student.getMajor() == temp->next->student.getMajor())) {
+                // find the count of the consecutive students with the same major
+                count++;
+                temp = temp->next;
             }
-            temp = temp->next;
+            if(count < maxGroupSize) { // put the student behind them if there is enough space for him
+                temp->next = new Node{student, temp->next};
+                if(tail == temp) { // update tail
+                    tail = temp->next;
+                }
+                size++;
+                return;
+            }
         }
-        tail->next = new Node{student, nullptr};
-        tail = tail->next;
-        size++;
+        temp = temp->next;
     }
+    insertAtEnd(student); // if there is still no available group, just put the student at the end of the list
 }
 
-void StudentLinkedList::enter(StudentLinkedList& other, size_t otherCapacity, size_t currentMinute, size_t maxGroupSize, std::ostream& output) {
-    if(isEmpty()) return;
+void StudentLinkedList::enter(StudentLinkedList& studentsInBar, size_t barCapacity, size_t currentMinute, size_t maxGroupSize, std::ostream& output) {
+    // "this" is used for the studentsWaiting list
     size_t count = 1;
     Node* temp = head;
-    if(size == 1) {
-        temp->student.setLeavingMinute(currentMinute + temp->student.getDuration());
-        other.insertAtEnd(temp->student);
-        output << currentMinute << " " << temp->student.getFN() << " enter" << std::endl;
-        deleteFirst();
-        return;
-    }
-    while(temp && other.getSize() < otherCapacity) { // for every group in the current list (queue of students waiting to enter the bar)
+
+    while(temp && studentsInBar.getSize() < barCapacity) { // for every group in the current list (queue of students waiting to enter the bar)
         Node* headOfGroup = temp;
         Major major = temp->student.getMajor();
         // save the first node of the current group
@@ -94,12 +80,12 @@ void StudentLinkedList::enter(StudentLinkedList& other, size_t otherCapacity, si
             }
         }
 
-        if(count <= otherCapacity - other.getSize()) { // if there is enough space
+        if(count <= barCapacity - studentsInBar.getSize()) { // if there is enough space
             temp = headOfGroup;
-            while(count-- > 0) {
+            while(count-- > 0) { // insert the group into the bar list AND delete it from the current list of waiting students
                 Node* next = temp->next;
                 temp->student.setLeavingMinute(currentMinute + temp->student.getDuration());
-                other.insertAtEnd(temp->student);
+                studentsInBar.insertAtEnd(temp->student);
                 output << currentMinute << " " << temp->student.getFN() << " enter" << std::endl;
                 deleteNode(temp);
                 temp = next;
@@ -112,36 +98,26 @@ void StudentLinkedList::enter(StudentLinkedList& other, size_t otherCapacity, si
 }
 
 void StudentLinkedList::deleteNode(Node* node) {
-    if(!head) {
-        return;
-    }
+    if (!head || !node) return;
 
-    if(!node) {
-        return;
-    }
-
-    Node* temp = head;
-    if(head == node) {
-        temp = head->next;
-        delete head;
-        head = temp;
+    if (head == node) {
+        head = head->next;
         if (!head) {
             tail = nullptr;
         }
-        size--;
-        return;
-    }
+    } else {
+        Node* temp = head;
+        while (temp->next && temp->next != node) {
+            temp = temp->next;
+        }
 
-    while(temp->next) {
-        if(temp->next == node) {
-            if(tail == temp->next) {
+        if (temp->next) {
+            temp->next = temp->next->next;
+            if (tail == node) {
                 tail = temp;
             }
-            temp->next = temp->next->next;
-            delete node;
-            size--;
-            return;
         }
-        temp = temp->next;
     }
+    delete node;
+    size--;
 }
