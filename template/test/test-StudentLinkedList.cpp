@@ -1,5 +1,6 @@
 #include "catch2/catch_all.hpp"
 #include "simulator-lib/StudentLinkedList.h"
+#include "simulator-lib/bar-simulator.h"
 
 TEST_CASE("empty list")
 {

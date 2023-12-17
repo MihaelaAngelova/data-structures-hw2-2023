@@ -34,7 +34,7 @@ Major strToMajor(std::string str) {
         return SUBJECTIVISTICS;
     } else if(str == "Magnetism and Clearing") {
         return MAGNETISMANDCLEARING;
-    } else throw std::runtime_error("Major not found!");
+    } else throw incorrect_simulation("Major not found!");
 }
 
 Student studentUpdate(std::istream& input) {
@@ -52,8 +52,8 @@ Student studentUpdate(std::istream& input) {
         }
     }
 
-    if(spaces < 3) { // wrong input
-        throw std::runtime_error("Not enough student data!");
+    if(spaces < 3 || spaces > 5) { // wrong input
+        throw incorrect_simulation("Not enough student data!");
     }
 
     size_t currSpaces = 0;
@@ -75,13 +75,25 @@ Student studentUpdate(std::istream& input) {
     std::string majorString = line.substr(indexOfSecondSpace + 1, indexOfLastSpace - indexOfSecondSpace - 1);
     std::string durationString = line.substr(indexOfLastSpace + 1);
 
-    size_t fn, minute, duration; // set input values
-    fn = (size_t)stoi(fnString);
-    minute = (size_t)stoi(minuteString);
-    Major major = strToMajor(majorString);
-    duration = (size_t)stoi(durationString);
+    // SET INPUT VALUES
+    int fnInt = stoi(fnString);
+    if (fnInt < 0) {
+        throw incorrect_simulation("Invalid value for fn: " + fnString);
+    }
 
-    Student student(fn, minute, major, duration); // update student data
+    int minuteInt = stoi(minuteString);
+    if (minuteInt < 0) {
+        throw incorrect_simulation("Invalid value for minute: " + minuteString);
+    }
+
+    Major major = strToMajor(majorString);
+
+    int durationInt = stoi(durationString);
+    if (durationInt < 0) {
+        throw incorrect_simulation("Invalid value for duration: " + durationString);
+    }
+
+    Student student((size_t)fnInt, (size_t)minuteInt, major, (size_t)durationInt); // update student data
     return student;
 }
 
@@ -95,7 +107,7 @@ void simulate_bar(std::istream& input, std::ostream& output)
     std::getline(input, firstLine);
 
     if(firstLine.empty()) {
-        throw std::runtime_error("Empty input!");
+        throw incorrect_simulation("Empty input!");
     }
 
     std::stringstream firstLineStream(firstLine);
