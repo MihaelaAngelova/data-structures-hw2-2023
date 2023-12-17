@@ -9,7 +9,6 @@ struct Node {
     Student student;
     Node* next;
     Node(Student student, Node* next): student(student), next(next) {}
-    Node(Student student): student(student) {}
 };
 
 class StudentLinkedList {
