@@ -310,7 +310,7 @@ TEST_CASE("enter() works when there is space in the second group")
     REQUIRE(output.str() == "42 4 enter\n");
 }
 
-TEST_CASE("enter() handles leaving students when there is space for two groups")
+TEST_CASE("enter() works when there is space for two groups")
 {
     StudentLinkedList queue;
     StudentLinkedList bar;
@@ -342,7 +342,7 @@ TEST_CASE("enter() handles leaving students when there is space for two groups")
     REQUIRE(output.str() == "42 1 enter\n42 2 enter\n42 5 enter\n");
 }
 
-TEST_CASE("leave() handles leaving students when bar has space for all groups")
+TEST_CASE("leave() works when bar has space for all groups")
 {
     StudentLinkedList sll;
     StudentLinkedList bar;
@@ -369,4 +369,43 @@ TEST_CASE("leave() handles leaving students when bar has space for all groups")
     REQUIRE(sll.toString() == expectedQueue);
     REQUIRE(bar.toString() == expectedBar);
     REQUIRE(output.str() == "42 1 enter\n42 2 enter\n42 3 enter\n42 4 enter\n");
+}
+
+TEST_CASE("Copy constructor works correctly") {
+    StudentLinkedList original;
+    Student student1(1, 0, FRAUD, 2);
+    Student student2(2, 0, SUBJECTIVISTICS, 2);
+    original.insertAtEnd(student1);
+    original.insertAtEnd(student2);
+
+    StudentLinkedList copy(original);
+
+    REQUIRE(copy.toString() == original.toString());
+    REQUIRE(copy.getSize() == original.getSize());
+}
+
+TEST_CASE("operator= works correctly") {
+    StudentLinkedList original;
+    Student student1(1, 0, FRAUD, 2);
+    Student student2(2, 0, SUBJECTIVISTICS, 2);
+    original.insertAtEnd(student1);
+    original.insertAtEnd(student2);
+
+    StudentLinkedList copy;
+    copy = original;
+
+    REQUIRE(copy.toString() == original.toString());
+    REQUIRE(copy.getSize() == original.getSize());
+}
+
+TEST_CASE("Destructor works correctly") {
+    StudentLinkedList* sll = new StudentLinkedList();
+    Student student1(1, 0, FRAUD, 2);
+    Student student2(2, 0, SUBJECTIVISTICS, 2);
+    sll->insertAtEnd(student1);
+    sll->insertAtEnd(student2);
+
+    delete sll;
+
+    REQUIRE(sll->getSize() == 0);
 }

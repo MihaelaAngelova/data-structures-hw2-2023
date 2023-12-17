@@ -1,6 +1,38 @@
 #include "StudentLinkedList.h"
 #include <sstream>
 
+StudentLinkedList::StudentLinkedList(const StudentLinkedList& other) {
+    head = nullptr;
+    tail = nullptr;
+    size = 0;
+
+    Node* temp = other.head; // copy the new data
+    while(temp) {
+        insertAtEnd(temp->student);
+        temp = temp->next;
+    }
+}
+StudentLinkedList& StudentLinkedList::operator=(const StudentLinkedList& other) {
+    if(this != &other) {
+        while(!isEmpty()) { // delete the old data
+            deleteFirst();
+        }
+
+        Node* temp = other.head; // copy the new data
+        while(temp) {
+            insertAtEnd(temp->student);
+            temp = temp->next;
+        }
+    }
+    return *this;
+}
+
+StudentLinkedList::~StudentLinkedList() {
+    while(!isEmpty()) {
+        deleteFirst();
+    }
+}
+
 bool StudentLinkedList::isEmpty()const {
     return !head;
 }

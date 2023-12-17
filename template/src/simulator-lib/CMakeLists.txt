@@ -12,4 +12,6 @@ target_sources(
 		"bar-simulator.h"
 		"Student.h"
 		"Student.cpp"
+		"StudentLinkedList.h"
+		"StudentLinkedList.cpp"
 )

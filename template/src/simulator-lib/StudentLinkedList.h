@@ -9,6 +9,7 @@ struct Node {
     Student student;
     Node* next;
     Node(Student student, Node* next): student(student), next(next) {}
+    Node(Student student): student(student) {}
 };
 
 class StudentLinkedList {
@@ -19,6 +20,9 @@ private:
     void deleteNode(Node* node);
 public:
     StudentLinkedList(): head(nullptr), tail(nullptr), size(0) {}
+    StudentLinkedList(const StudentLinkedList& other); // copy constructor
+    StudentLinkedList& operator=(const StudentLinkedList& other); // operator=
+    ~StudentLinkedList(); // destructor
     bool isEmpty()const;
     void insertAtEnd(Student student);
     void deleteFirst();

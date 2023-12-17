@@ -13,6 +13,7 @@ target_sources(
 	unit-tests
 	PRIVATE
 		"test-simulation.cpp"
+		"test-StudentLinkedList.cpp"
 )
 
 # Automatically register all tests
